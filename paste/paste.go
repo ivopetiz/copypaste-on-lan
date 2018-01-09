@@ -1,9 +1,3 @@
-/*
-TODO
-- fazer GetLocalIP
-- ipscan com go routines
---- fazer path.Base a mao
-*/
 
 package main
 
