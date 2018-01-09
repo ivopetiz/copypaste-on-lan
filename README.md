@@ -32,30 +32,4 @@ Usage of copy:
     	Copy server window duration (in seconds) (default 300)
 ```
 
-- copy / server side
-- paste / client side
-- parse opts
-    :copy
-        - debug
-        - timeout
-        - file
-        - dir
-        - move
-        - pass
-        - network
-        - internet
-
-    :paste
-        - debug
-        - ip
-        - port
-
- - copy cria um servidor de ficheiros com ssl numa porta especifica
- - paste precisa de nmap para a porta especifica para toda a gama de rede em q está
- - pensar em cifrar dados
-
- - tentar copiar os dados para uma pasta tmp e depois servir esse diretorio
- - pensar na parte do texto
-
- - só ipv4 por agora
 
