@@ -250,8 +250,7 @@ func main() {
 	port := flag.String("port", DEFAULT_PORT, "Port to Copy's server")
 	ip_addr := flag.String("ip", "", "Copy server IP address")
 	debug := flag.Bool("debug", false, "Get all significant info")
-	//pass 	:= flag.String("pwd", "pass marota", "Passphrase to improve copy/paste security")
-	//crypt	:= flag.Bool("crypt", true, "Unsecure transmition")
+
 	flag.Parse()
 
 	Init(*debug)

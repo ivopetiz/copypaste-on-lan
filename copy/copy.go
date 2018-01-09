@@ -1,7 +1,7 @@
-
 package main
 
 import (
+	"compress/gzip"
 	"crypto/aes"
 	"crypto/cipher"
 	"flag"
@@ -16,7 +16,6 @@ import (
 	"runtime"
 	"strconv"
 	"time"
-	"compress/gzip"
 
 	color "github.com/fatih/color"
 )
@@ -217,11 +216,11 @@ func main() {
 	Bold := color.New(color.Bold).SprintFunc()
 
 	// P A R S E R
-	port 	:= flag.Int("port", 9876, "Port to Copy's server")
+	port := flag.Int("port", 9876, "Port to Copy's server")
 	timeout := flag.Int("time", 300, "Copy server window duration (in seconds)")
-	ip_dst 	:= flag.String("ip", "", "Destiny machine IP address")
-	debug 	:= flag.Bool("debug", false, "Get all significant info")
-	local 	:= flag.Bool("local", false, "Intern transfer")
+	ip_dst := flag.String("ip", "", "Destiny machine IP address")
+	debug := flag.Bool("debug", false, "Get all significant info")
+	local := flag.Bool("local", false, "Intern transfer")
 	flag.Parse()
 
 	// Check if flags are valid.
@@ -253,6 +252,7 @@ func main() {
 				log.Println(color_info + "IP Address destination: " + Bold(*ip_dst))
 			}
 		}
+	}
 
 	// Check what is the working dir
 	if len(flag.Args()) == 0 || (len(flag.Args()) == 1 && flag.Args()[0] == "*") {
@@ -310,3 +310,4 @@ func main() {
 	}
 
 	Copy(files_to_copy, *port, *debug)
+}
