@@ -10,10 +10,10 @@ Copy/paste text and files between computers, along the network. Written in Golan
 git clone https://github.com/ivopetiz/copypaste-on-lan.git
 cd copypaste-on-lan/copy/
 env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" copy.go
-sudo cp copy /usr/local/bin/
+sudo cp copy /usr/local/bin/gocopy
 cd ../paste
 env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" paste.go
-sudo cp paste /usr/local/bin/cpaste
+sudo cp paste /usr/local/bin/gopaste
 ```
 
 ## COPY ON LAN
