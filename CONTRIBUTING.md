@@ -4,7 +4,7 @@
 
 ### Have a feature you want implemented?
 
-  Open an [issue](https://github.com/ivopetiz/copypaste-on-lan/issues) stating what feature you wish to implement, [pull requests](https://github.com/ivopetiz/copypaste-on-lan/pulls) are encouraged and will speed up implementation.   
+  Open an [issue](https://github.com/ivopetiz/copypaste-on-lan/issues) stating what feature you wish to implement, [pull requests](https://github.com/ivopetiz/copypaste-on-lan/pulls) are encouraged and will speed up implementation.
 
 ### Found a bug that needs fixing?
 
