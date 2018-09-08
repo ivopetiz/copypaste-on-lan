@@ -1,5 +1,7 @@
 # Copypaste-on-lan
 
+[![Build Status](https://travis-ci.com/ivopetiz/copypaste-on-lan.svg?branch=master)](https://travis-ci.com/ivopetiz/copypaste-on-lan)
+
 Copy/paste text and files between computers, along the network. Written in Golang.
 
 ## Installation
