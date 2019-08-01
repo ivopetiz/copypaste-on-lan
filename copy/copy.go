@@ -183,7 +183,7 @@ func Copy(files []string, port int, debug bool) error {
 	if debug {
 		log.Println(color_info + "Copy is ready!")
 	} else {
-		fmt.Println("Copy is ready\n")
+		fmt.Println("Copy is ready")
 	}
 	panic(http.ListenAndServe(":"+strconv.Itoa(port), http.FileServer(http.Dir(tmp_dir))))
 }
@@ -201,9 +201,9 @@ func RoomService(dir string, debug bool) error {
 func Init(debug bool) {
 	if debug {
 		log.Println(color_info + "Copy On Lan")
-		log.Println(color_info + "Debug Mode\n")
+		log.Println(color_info + "Debug Mode")
 	} else {
-		fmt.Println("Copy On Lan\n")
+		fmt.Println("Copy On Lan")
 	}
 }
 
