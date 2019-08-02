@@ -22,12 +22,9 @@ import (
 
 const (
 	DefaultPort string = "9876"
-	//has_config_file 		bool   = false
 
-	// Info
 	INFOexiting string = "Exiting"
 
-	// Errors
 	ERRwrongPortOrIP    string = "Given IP or port are incorrect"
 	ERRlocalIPnotFound  string = "Local IP not found"
 	ERRpaste            string = "Something went wrong with the paste"
@@ -54,8 +51,8 @@ type InfoFile struct {
 func (ip *IPv4) ToString() string {
 	ipStringed := strconv.Itoa(ip[0])
 	for i := 1; i < 4; i++ {
-		str_i := strconv.Itoa(ip[i])
-		ipStringed += "." + str_i
+		strIP := strconv.Itoa(ip[i])
+		ipStringed += "." + strIP
 	}
 	return ipStringed
 }
@@ -134,9 +131,9 @@ func Init(debug bool) {
 }
 
 // Paste is used to Download file(s) from Copy server
-func Paste(copy_ip, port string, debug bool) (string, error) {
+func Paste(copyIP, port string, debug bool) (string, error) {
 	var linkServer string = "http://" +
-		copy_ip + ":" +
+		copyIP + ":" +
 		port + "/"
 
 	file, err := DownloadFile(linkServer + ".info.txt")
@@ -204,9 +201,9 @@ func PortIsOpen(ipAddr, port string, debug bool) bool {
 
 	var openPort []string
 
-	var port_ []string
+	var newPort []string
 
-	openPort = portscanner.PortScanner(portscanner.ToIPv4(ipAddr), append(port_, port))
+	openPort = portscanner.PortScanner(portscanner.ToIPv4(ipAddr), append(newPort, port))
 
 	if len(openPort) == 1 {
 		return true
@@ -220,15 +217,15 @@ func PortIsOpen(ipAddr, port string, debug bool) bool {
 func ServersScan(ip, port string, debug bool) []string {
 
 	var ipRange []string
-	port_slc := []string{port}
+	portSlc := []string{port}
 
 	var servers []string
 
 	ipRange = append(ipRange, ip[:strings.LastIndex(ip, ".")]+".1-254")
 
-	servers_map := portscanner.IPScanner(ipRange, port_slc, false)
+	serversMap := portscanner.IPScanner(ipRange, portSlc, false)
 
-	for ip, _ := range servers_map {
+	for ip, _ := range serversMap {
 		servers = append(servers, ip.ToString())
 	}
 
