@@ -129,7 +129,7 @@ func Init(debug bool) {
 		log.Println(cInfo + "Paste On Lan")
 		log.Println(cInfo + "Debug Mode\n")
 	} else {
-		fmt.Println("Paste On Lan\n")
+		fmt.Println("Paste On Lan")
 	}
 }
 

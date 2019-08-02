@@ -1,5 +1,6 @@
 # Copypaste-on-lan
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f04e44763804dc7b833948b3d59feda)](https://app.codacy.com/app/ivopetiz/copypaste-on-lan?utm_source=github.com&utm_medium=referral&utm_content=ivopetiz/copypaste-on-lan&utm_campaign=Badge_Grade_Settings)
 [![Build Status](https://travis-ci.com/ivopetiz/copypaste-on-lan.svg?branch=master)](https://travis-ci.com/ivopetiz/copypaste-on-lan)
 
 Copy/paste text and files between computers, along the network. Written in Golang.
