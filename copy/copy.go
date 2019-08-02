@@ -24,40 +24,40 @@ const (
 	OS      string = runtime.GOOS
 	VERSION string = "0.0.0"
 
-	MIN_PORT       int  = 1025
-	MAX_PORT       int  = 65536
-	KEY_SIZE       int8 = 16
-	RAND_MAX       int  = 999997
-	MAX_to_present int  = 20
+	MinPort       int  = 1025
+	MaxPort       int  = 65536
+	KeySize       int8 = 16
+	RandMax       int  = 999997
+	MaxToPresent  int  = 20
 
-	ERR_low_port           string = " Port must be bigger than 1024"
-	ERR_high_port          string = " Port must be smaller than 65536"
-	ERR_invalid_port       string = " Port is not valid"
-	ERR_dir_not_found      string = " Directory doesn't exist"
-	ERR_file_not_found     string = " File not found"
-	ERR_no_files           string = " Without files to copy"
-	ERR_empty_dir          string = " Empty directory"
-	ERR_file_error         string = " Can't upload "
-	ERR_local_ip_not_found string = "Local IP not found"
+	ERRlowPort           string = " Port must be bigger than 1024"
+	ERRhighPort          string = " Port must be smaller than 65536"
+	ERRinvalidPort       string = " Port is not valid"
+	ERRdirNotFound       string = " Directory doesn't exist"
+	ERRfileNotFound      string = " File not found"
+	ERRnoFile            string = " Without files to copy"
+	ERRemptyDir          string = " Empty directory"
+	ERRfileError         string = " Can't upload "
+	ERRlocalIPnotFound   string = "Local IP not found"
 
-	END_char_linux string = "/"
+	ENDcharLinux string = "/"
 )
 
 var (
 	ip [4]byte
 
 	// coloring system messages
-	color_file string = color.New(color.Bold, color.FgCyan).SprintFunc()("[ FILE ] ")
-	color_info string = color.New(color.Bold, color.FgWhite).SprintFunc()("[ INFO ] ")
-	color_warn string = color.New(color.Bold, color.FgMagenta).SprintFunc()("[ WARN ] ")
-	color_err  string = color.New(color.Bold, color.FgRed).SprintFunc()("[ ERR  ] ")
+	colorFile string = color.New(color.Bold, color.FgCyan).SprintFunc()("[ FILE ] ")
+	colorInfo string = color.New(color.Bold, color.FgWhite).SprintFunc()("[ INFO ] ")
+	colorWarn string = color.New(color.Bold, color.FgMagenta).SprintFunc()("[ WARN ] ")
+	colorErr  string = color.New(color.Bold, color.FgRed).SprintFunc()("[ ERR  ] ")
 )
 
 var Config struct {
-	port_s    uint16
-	timeout_s uint
-	crypt_s   bool
-	move_s    bool
+	portS    uint16
+	timeoutS uint
+	cryptS   bool
+	moveS    bool
 }
 
 func IsOK(err error, message string) error {
@@ -75,8 +75,8 @@ func IsOK(err error, message string) error {
 func Timeout(expire int, debug bool) {
 	time.Sleep(time.Duration(expire) * time.Second)
 	if debug {
-		log.Println(color_info + " Time is over")
-		log.Println(color_info + " Exiting...")
+		log.Println(colorInfo + " Time is over")
+		log.Println(colorInfo + " Exiting...")
 	}
 	os.Exit(0)
 }
@@ -102,16 +102,16 @@ func GetLocalIP() (string, error) {
 // are declared. Also used in case of passing text instead of files.
 func CreateFileList(dir string, files []string, debug bool) error {
 
-	var all_files string
+	var allFiles string
 
 	for _, file := range files {
-		all_files += file + "\n"
+		allFiles += file + "\n"
 	}
 
 	if debug {
-		log.Println(color_info + "Generating " + dir + "/.info.txt")
+		log.Println(colorInfo + "Generating " + dir + "/.info.txt")
 	}
-	d1 := []byte(all_files)
+	d1 := []byte(allFiles)
 	err := ioutil.WriteFile(dir+"/.info.txt", d1, 0644)
 
 	return err
@@ -146,52 +146,52 @@ func Copy(files []string, port int, debug bool) error {
 	Bold := color.New(color.Bold).SprintFunc()
 	// Create tmp dir
 	rand.Seed(time.Now().UTC().UnixNano())
-	tmp_dir := os.TempDir() + "/cp" + strconv.Itoa(rand.Intn(RAND_MAX))
-	os.Mkdir(tmp_dir, 0755)
+	tmpDir := os.TempDir() + "/cp" + strconv.Itoa(rand.Intn(RandMax))
+	os.Mkdir(tmpDir, 0755)
 
-	defer RoomService(tmp_dir, debug)
+	defer RoomService(tmpDir, debug)
 
-	err := CreateFileList(tmp_dir, files, debug)
+	err := CreateFileList(tmpDir, files, debug)
 	if err != nil {
-		log.Println(color_err + "Couldn't generate info file")
+		log.Println(colorErr + "Couldn't generate info file")
 		log.Println(err)
 	}
 
 	if debug {
-		if len(files) > MAX_to_present {
-			log.Println(color_info + "Copying " + strconv.Itoa(len(files)) + " files")
+		if len(files) > MaxToPresent  {
+			log.Println(colorInfo + "Copying " + strconv.Itoa(len(files)) + " files")
 		} else {
-			log.Println(color_info + "Copying: ")
+			log.Println(colorInfo + "Copying: ")
 		}
 	}
 	for nl, file := range files {
-		if debug && len(files) <= MAX_to_present {
+		if debug && len(files) <= MaxToPresent  {
 			if nl < len(files)-1 {
-				log.Println(color_file + " ├ " + file)
+				log.Println(colorFile + " ├ " + file)
 			} else {
-				log.Println(color_file + " └ " + file)
+				log.Println(colorFile + " └ " + file)
 			}
 		}
 		// move to temporary dir
-		err := CopyFile(tmp_dir+"/"+file, file, make([]byte, 16), make([]byte, 16))
+		err := CopyFile(tmpDir+"/"+file, file, make([]byte, 16), make([]byte, 16))
 		if err != nil {
-			log.Println(color_err + "  " + ERR_file_error + Bold(file))
+			log.Println(colorErr + "  " + ERRfileError + Bold(file))
 			log.Println(err)
 			continue
 		}
 	}
 	if debug {
-		log.Println(color_info + "Copy is ready!")
+		log.Println(colorInfo + "Copy is ready!")
 	} else {
 		fmt.Println("Copy is ready\n")
 	}
-	panic(http.ListenAndServe(":"+strconv.Itoa(port), http.FileServer(http.Dir(tmp_dir))))
+	panic(http.ListenAndServe(":"+strconv.Itoa(port), http.FileServer(http.Dir(tmpDir))))
 }
 
 // RoomService erases the folder created to serve files with all files.
 func RoomService(dir string, debug bool) error {
 	if debug {
-		log.Println(color_info + "Cleaning tmp folder")
+		log.Println(colorInfo + "Cleaning tmp folder")
 	}
 	err := os.RemoveAll(dir)
 	fmt.Println(err)
@@ -200,8 +200,8 @@ func RoomService(dir string, debug bool) error {
 
 func Init(debug bool) {
 	if debug {
-		log.Println(color_info + "Copy On Lan")
-		log.Println(color_info + "Debug Mode\n")
+		log.Println(colorInfo + "Copy On Lan")
+		log.Println(colorInfo + "Debug Mode\n")
 	} else {
 		fmt.Println("Copy On Lan\n")
 	}
@@ -209,7 +209,7 @@ func Init(debug bool) {
 
 func main() {
 
-	var files_to_copy []string
+	var filesToCopy []string
 	var dir string
 	var err error
 
@@ -224,12 +224,12 @@ func main() {
 	flag.Parse()
 
 	// Check if flags are valid.
-	if *port < MIN_PORT {
-		log.Println(color_err + ERR_low_port)
+	if *port < MinPort {
+		log.Println(colorErr + ERRlowPort)
 		os.Exit(1)
 	}
-	if *port > MAX_PORT {
-		log.Println(color_err + ERR_high_port)
+	if *port > MaxPort {
+		log.Println(colorErr + ERRhighPort)
 		os.Exit(1)
 	}
 
@@ -238,18 +238,18 @@ func main() {
 	// DEBUG
 	if *debug {
 		if *local {
-			log.Println(color_info + "Intern Copy")
+			log.Println(colorInfo + "Intern Copy")
 		} else {
 			local_ip, err := GetLocalIP()
 			if err != nil {
-				log.Println(color_err + ERR_local_ip_not_found)
+				log.Println(colorErr + ERRlocalIPnotFound)
 			} else {
-				log.Println(color_info + "IP Address: " + local_ip)
+				log.Println(colorInfo + "IP Address: " + local_ip)
 			}
-			log.Println(color_info + "Port: " + strconv.Itoa(*port))
+			log.Println(colorInfo + "Port: " + strconv.Itoa(*port))
 			// IP dst defined
 			if *ip_dst != "" {
-				log.Println(color_info + "IP Address destination: " + Bold(*ip_dst))
+				log.Println(colorInfo + "IP Address destination: " + Bold(*ip_dst))
 			}
 		}
 	}
@@ -258,7 +258,7 @@ func main() {
 	if len(flag.Args()) == 0 || (len(flag.Args()) == 1 && flag.Args()[0] == "*") {
 		dir, err = os.Getwd()
 		if err != nil {
-			log.Fatal(color_err + ERR_dir_not_found)
+			log.Fatal(colorErr + ERRdirNotFound)
 			os.Exit(1)
 		}
 		// Check if first arg is a dir
@@ -269,10 +269,10 @@ func main() {
 		for _, file := range flag.Args() {
 			if _, err := os.Stat(file); err == nil {
 				// path/to/whatever exists
-				files_to_copy = append(files_to_copy, file)
+				filesToCopy = append(filesToCopy, file)
 			} else {
-				log.Fatal(color_err + file + " -" + ERR_file_not_found)
-			}
+		 		log.Fatal(colorErr + file + " -" + ERRfileNotFound)
+		 	}
 		}
 		// Exit if there are no files to copy
 	}
@@ -281,33 +281,34 @@ func main() {
 	if dir != "" {
 		wrk_dir, err := os.Open(dir)
 		// Exit if dir is empty or other error
-		files_to_copy, err = wrk_dir.Readdirnames(0)
+		filesToCopy, err = wrk_dir.Readdirnames(0)
 		if err != nil {
-			log.Fatal(color_err + ERR_no_files)
+			log.Fatal(colorErr + ERRnoFile )
 			os.Exit(1)
 		}
-		//_ = files_to_copy
+		//_ = filesToCopy
 	}
 
-	if len(files_to_copy) == 0 {
-		log.Fatal(color_err + ERR_no_files)
+	if len(filesToCopy) == 0 {
+		log.Fatal(colorErr + ERRnoFile )
 		os.Exit(1)
 	}
 	// call Timeout trigger
 
 	if *timeout != 0 {
 		if *debug {
-			log.Println(color_info + "Expires at " + Bold(time.Now().Add(time.Duration(*timeout)*time.Second).Format("Jan 2 15:04:05")))
+			log.Println(colorInfo + "Expires at " + \
+				Bold(time.Now().Add(time.Duration(*timeout)*time.Second).Format("Jan 2 15:04:05")))
 		}
 		go Timeout(*timeout, *debug)
 	} else {
 		if *debug {
-			log.Println(color_info + "Undefined timeout")
-			log.Println(color_warn + "Need to press Ctrl+C to quit!")
+			log.Println(colorInfo + "Undefined timeout")
+			log.Println(colorWarn + "Need to press Ctrl+C to quit!")
 		} else {
 			fmt.Println("Press Ctrl+C to quit")
 		}
 	}
 
-	Copy(files_to_copy, *port, *debug)
+	Copy(filesToCopy, *port, *debug)
 }
