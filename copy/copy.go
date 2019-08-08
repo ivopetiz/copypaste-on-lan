@@ -200,13 +200,10 @@ func RoomService(dir string, debug bool) error {
 
 func Init(debug bool) {
 	if debug {
-<<<<<<< HEAD
 		log.Println(colorInfo + "Copy On Lan")
 		log.Println(colorInfo + "Debug Mode\n")
-=======
 		log.Println(color_info + "Copy On Lan")
 		log.Println(color_info + "Debug Mode")
->>>>>>> 662e61573a76e15c9a38b0f92ae4adb4accd4fa8
 	} else {
 		fmt.Println("Copy On Lan")
 	}
@@ -302,7 +299,7 @@ func main() {
 
 	if *timeout != 0 {
 		if *debug {
-			log.Println(colorInfo + "Expires at " + \
+			log.Println(colorInfo + "Expires at " +
 				Bold(time.Now().Add(time.Duration(*timeout)*time.Second).Format("Jan 2 15:04:05")))
 		}
 		go Timeout(*timeout, *debug)
