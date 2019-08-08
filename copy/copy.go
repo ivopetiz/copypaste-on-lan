@@ -24,21 +24,21 @@ const (
 	OS      string = runtime.GOOS
 	VERSION string = "0.0.0"
 
-	MinPort       int  = 1025
-	MaxPort       int  = 65536
-	KeySize       int8 = 16
-	RandMax       int  = 999997
-	MaxToPresent  int  = 20
+	MinPort      int  = 1025
+	MaxPort      int  = 65536
+	KeySize      int8 = 16
+	RandMax      int  = 999997
+	MaxToPresent int  = 20
 
-	ERRlowPort           string = " Port must be bigger than 1024"
-	ERRhighPort          string = " Port must be smaller than 65536"
-	ERRinvalidPort       string = " Port is not valid"
-	ERRdirNotFound       string = " Directory doesn't exist"
-	ERRfileNotFound      string = " File not found"
-	ERRnoFile            string = " Without files to copy"
-	ERRemptyDir          string = " Empty directory"
-	ERRfileError         string = " Can't upload "
-	ERRlocalIPnotFound   string = "Local IP not found"
+	ERRlowPort         string = " Port must be bigger than 1024"
+	ERRhighPort        string = " Port must be smaller than 65536"
+	ERRinvalidPort     string = " Port is not valid"
+	ERRdirNotFound     string = " Directory doesn't exist"
+	ERRfileNotFound    string = " File not found"
+	ERRnoFile          string = " Without files to copy"
+	ERRemptyDir        string = " Empty directory"
+	ERRfileError       string = " Can't upload "
+	ERRlocalIPnotFound string = "Local IP not found"
 
 	ENDcharLinux string = "/"
 )
@@ -158,14 +158,14 @@ func Copy(files []string, port int, debug bool) error {
 	}
 
 	if debug {
-		if len(files) > MaxToPresent  {
+		if len(files) > MaxToPresent {
 			log.Println(colorInfo + "Copying " + strconv.Itoa(len(files)) + " files")
 		} else {
 			log.Println(colorInfo + "Copying: ")
 		}
 	}
 	for nl, file := range files {
-		if debug && len(files) <= MaxToPresent  {
+		if debug && len(files) <= MaxToPresent {
 			if nl < len(files)-1 {
 				log.Println(colorFile + " ├ " + file)
 			} else {
@@ -202,8 +202,8 @@ func Init(debug bool) {
 	if debug {
 		log.Println(colorInfo + "Copy On Lan")
 		log.Println(colorInfo + "Debug Mode\n")
-		log.Println(color_info + "Copy On Lan")
-		log.Println(color_info + "Debug Mode")
+		log.Println(colorInfo + "Copy On Lan")
+		log.Println(colorInfo + "Debug Mode")
 	} else {
 		fmt.Println("Copy On Lan")
 	}
@@ -220,7 +220,7 @@ func main() {
 	// P A R S E R
 	port := flag.Int("port", 9876, "Port to Copy's server")
 	timeout := flag.Int("time", 300, "Copy server window duration (in seconds)")
-	ip_dst := flag.String("ip", "", "Destiny machine IP address")
+	ipDst := flag.String("ip", "", "Destiny machine IP address")
 	debug := flag.Bool("debug", false, "Get all significant info")
 	local := flag.Bool("local", false, "Intern transfer")
 	flag.Parse()
@@ -242,16 +242,16 @@ func main() {
 		if *local {
 			log.Println(colorInfo + "Intern Copy")
 		} else {
-			local_ip, err := GetLocalIP()
+			localIP, err := GetLocalIP()
 			if err != nil {
 				log.Println(colorErr + ERRlocalIPnotFound)
 			} else {
-				log.Println(colorInfo + "IP Address: " + local_ip)
+				log.Println(colorInfo + "IP Address: " + localIP)
 			}
 			log.Println(colorInfo + "Port: " + strconv.Itoa(*port))
 			// IP dst defined
-			if *ip_dst != "" {
-				log.Println(colorInfo + "IP Address destination: " + Bold(*ip_dst))
+			if *ipDst != "" {
+				log.Println(colorInfo + "IP Address destination: " + Bold(*ipDst))
 			}
 		}
 	}
@@ -273,26 +273,26 @@ func main() {
 				// path/to/whatever exists
 				filesToCopy = append(filesToCopy, file)
 			} else {
-		 		log.Fatal(colorErr + file + " -" + ERRfileNotFound)
-		 	}
+				log.Fatal(colorErr + file + " -" + ERRfileNotFound)
+			}
 		}
 		// Exit if there are no files to copy
 	}
 
 	// In case of a dir, get all files
 	if dir != "" {
-		wrk_dir, err := os.Open(dir)
+		wrkDir, err := os.Open(dir)
 		// Exit if dir is empty or other error
-		filesToCopy, err = wrk_dir.Readdirnames(0)
+		filesToCopy, err = wrkDir.Readdirnames(0)
 		if err != nil {
-			log.Fatal(colorErr + ERRnoFile )
+			log.Fatal(colorErr + ERRnoFile)
 			os.Exit(1)
 		}
 		//_ = filesToCopy
 	}
 
 	if len(filesToCopy) == 0 {
-		log.Fatal(colorErr + ERRnoFile )
+		log.Fatal(colorErr + ERRnoFile)
 		os.Exit(1)
 	}
 	// call Timeout trigger
