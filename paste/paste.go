@@ -1,4 +1,3 @@
-
 package main
 
 import (
@@ -12,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
 	//"runtime"
 	"io/ioutil"
 	"net/http"
@@ -25,25 +25,25 @@ const (
 
 	INFOexiting string = "Exiting"
 
-	ERRwrongPortOrIP    string = "Given IP or port are incorrect"
-	ERRlocalIPnotFound  string = "Local IP not found"
-	ERRpaste            string = "Something went wrong with the paste"
-	ERRdownloadingFile  string = "Can't download file"
-	ERRipportPairDown   string = "Given ip:port not working"
-	ERRnoCopyMachines   string = "No Copy machines available"
+	ERRwrongPortOrIP   string = "Given IP or port are incorrect"
+	ERRlocalIPnotFound string = "Local IP not found"
+	ERRpaste           string = "Something went wrong with the paste"
+	ERRdownloadingFile string = "Can't download file"
+	ERRipportPairDown  string = "Given ip:port not working"
+	ERRnoCopyMachines  string = "No Copy machines available"
 )
 
 var (
-	cFile   string = color.New(color.Bold, color.FgCyan).SprintFunc()("[ FILE ] ")
-	cInfo   string = color.New(color.Bold, color.FgWhite).SprintFunc()("[ INFO ] ")
-	cDownld string = color.New(color.Bold, color.FgGreen).SprintFunc()("[DOWNLD] ")
-	cErr    string = color.New(color.Bold, color.FgRed).SprintFunc()("[ ERR  ] ")
+	cFile   = color.New(color.Bold, color.FgCyan).SprintFunc()("[ FILE ] ")
+	cInfo   = color.New(color.Bold, color.FgWhite).SprintFunc()("[ INFO ] ")
+	cDownld = color.New(color.Bold, color.FgGreen).SprintFunc()("[DOWNLD] ")
+	cErr    = color.New(color.Bold, color.FgRed).SprintFunc()("[ ERR  ] ")
 )
 
 type IPv4 [4]int
 
 type InfoFile struct {
-	text       bool
+	text      bool
 	listFiles []string
 }
 
@@ -97,6 +97,7 @@ func GetLocalIP() string {
 	return ERRlocalIPnotFound
 }
 
+// SelectServer allows you to select between available servers
 func SelectServer(servList []string) string {
 
 	var input string
@@ -111,16 +112,17 @@ func SelectServer(servList []string) string {
 		entry, _ := strconv.Atoi(input)
 		if entry > 0 && entry < len(servList) {
 			return servList[entry]
-		} else {
-			log.Println("\nSelect a valid entry!")
-			time.Sleep(2 * time.Second)
-			// limpar consola
-			fmt.Print("\033[2J")
 		}
+		log.Println("\nSelect a valid entry!")
+		time.Sleep(2 * time.Second)
+		// limpar consola
+		fmt.Print("\033[2J")
+
 		return "0"
 	}
 }
 
+// Init present initial message
 func Init(debug bool) {
 	if debug {
 		log.Println(cInfo + "Paste On Lan")
@@ -132,7 +134,8 @@ func Init(debug bool) {
 
 // Paste is used to Download file(s) from Copy server
 func Paste(copyIP, port string, debug bool) (string, error) {
-	var linkServer string = "http://" +
+
+	var linkServer = "http://" +
 		copyIP + ":" +
 		port + "/"
 
@@ -141,24 +144,22 @@ func Paste(copyIP, port string, debug bool) (string, error) {
 
 	if inf.text {
 		return "", nil
-	} else {
-		for _, remoteFile := range inf.listFiles {
-			if len(remoteFile) == 0 {
-				break
-			}
-			file, err := DownloadFile(linkServer + remoteFile)
-			if err != nil {
-				log.Fatal(err)
-			}
-			if debug {
-				log.Println(cDownld + file)
-			} else {
-				fmt.Println(file)
-			}
-
-		}
-		return "", err
 	}
+	for _, remoteFile := range inf.listFiles {
+		if len(remoteFile) == 0 {
+			break
+		}
+		file, err := DownloadFile(linkServer + remoteFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if debug {
+			log.Println(cDownld + file)
+		} else {
+			fmt.Println(file)
+		}
+	}
+	return "", err
 }
 
 // DownloadFile is used to download a file from an URL
@@ -186,7 +187,7 @@ func DownloadFile(url string) (string, error) { // Thanks PabloK
 // ParseIndex is used to get
 func ParseIndex(file string) (InfoFile, error) {
 	// so da para files agora -> corrigir
-	var text bool = false
+	var text = false
 	content, err := ioutil.ReadFile(file)
 	if err != nil {
 		log.Fatal(err)
@@ -207,13 +208,11 @@ func PortIsOpen(ipAddr, port string, debug bool) bool {
 
 	if len(openPort) == 1 {
 		return true
-	} else {
-		return false
 	}
-
+	return false
 }
 
-// IPScan returns all IP addresses with copy server available.
+// ServersScan returns all IP addresses with copy server available.
 func ServersScan(ip, port string, debug bool) []string {
 
 	var ipRange []string
@@ -225,7 +224,7 @@ func ServersScan(ip, port string, debug bool) []string {
 
 	serversMap := portscanner.IPScanner(ipRange, portSlc, false)
 
-	for ip, _ := range serversMap {
+	for ip := range serversMap {
 		servers = append(servers, ip.ToString())
 	}
 

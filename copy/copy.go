@@ -47,10 +47,10 @@ var (
 	ip [4]byte
 
 	// coloring system messages
-	colorFile string = color.New(color.Bold, color.FgCyan).SprintFunc()("[ FILE ] ")
-	colorInfo string = color.New(color.Bold, color.FgWhite).SprintFunc()("[ INFO ] ")
-	colorWarn string = color.New(color.Bold, color.FgMagenta).SprintFunc()("[ WARN ] ")
-	colorErr  string = color.New(color.Bold, color.FgRed).SprintFunc()("[ ERR  ] ")
+	colorFile = color.New(color.Bold, color.FgCyan).SprintFunc()("[ FILE ] ")
+	colorInfo = color.New(color.Bold, color.FgWhite).SprintFunc()("[ INFO ] ")
+	colorWarn = color.New(color.Bold, color.FgMagenta).SprintFunc()("[ WARN ] ")
+	colorErr  = color.New(color.Bold, color.FgRed).SprintFunc()("[ ERR  ] ")
 )
 
 var Config struct {
@@ -60,6 +60,7 @@ var Config struct {
 	moveS    bool
 }
 
+// IsOK checks if there is an error
 func IsOK(err error, message string) error {
 	if err != nil {
 		log.Println(message)
@@ -117,7 +118,7 @@ func CreateFileList(dir string, files []string, debug bool) error {
 	return err
 }
 
-// Encrypt original and compress files
+// CopyFile encrypts original and compress files
 func CopyFile(dstfile, srcfile string, key, iv []byte) error {
 	r, err := os.Open(srcfile)
 	if err != nil {
@@ -140,7 +141,7 @@ func CopyFile(dstfile, srcfile string, key, iv []byte) error {
 	return err
 }
 
-// Creates FileServer at port *port, serving directory dir.
+// Copy creates FileServer at port *port, serving directory dir.
 func Copy(files []string, port int, debug bool) error {
 
 	Bold := color.New(color.Bold).SprintFunc()
@@ -198,6 +199,7 @@ func RoomService(dir string, debug bool) error {
 	return err
 }
 
+// Init present initial info of Copy
 func Init(debug bool) {
 	if debug {
 		log.Println(colorInfo + "Copy On Lan")
